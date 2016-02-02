@@ -12,10 +12,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import jiconfont.IconCode;
-import jiconfont.icons.Elusive;
-import jiconfont.icons.FontAwesome;
-import jiconfont.icons.GoogleMaterialDesignIcons;
-import jiconfont.icons.Iconic;
+import jiconfont.icons.*;
 import jiconfont.javafx.IconBuilderFX;
 
 import javax.imageio.ImageIO;
@@ -56,6 +53,17 @@ public class IconFontScreenshot extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createIcon(IconCode iconCode, String filename) {
+        HBox iconsPane = new HBox();
+        iconsPane.setAlignment(Pos.CENTER);
+        iconsPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+
+        Label label = IconBuilderFX.newIcon(iconCode).setSize(25).setColor(Color.CORNFLOWERBLUE).buildLabel();
+        iconsPane.getChildren().add(label);
+
+        writeImage(iconsPane, filename);
     }
 
     private void createMultipleColors(IconCode iconCode, String filename) {
@@ -117,8 +125,11 @@ public class IconFontScreenshot extends Application {
         createIcon(FontAwesome.values(), FontAwesome.class.getSimpleName());
         createIcon(Iconic.values(), Iconic.class.getSimpleName());
         createIcon(Elusive.values(), Elusive.class.getSimpleName());
+        createIcon(Entypo.values(), Entypo.class.getSimpleName());
         createMultipleSizes(FontAwesome.CHECK, "multiplesizes");
         createMultipleColors(FontAwesome.CHECK, "multiplecolors");
+        createIcon(Elusive.LINKEDIN, "linkedin");
+        createIcon(Elusive.GITHUB, "github");
         Platform.exit();
     }
 
