@@ -49,6 +49,7 @@ import java.io.IOException;
 public class IconFontScreenshot extends Application {
 
     private void createIcon(IconCode[] iconCodes, String filename) {
+        filename = "./target/" + filename.toLowerCase() + ".png";
         TilePane iconsPane = new TilePane();
         iconsPane.setAlignment(Pos.CENTER);
         iconsPane.setPrefWidth(650);
@@ -76,10 +77,10 @@ public class IconFontScreenshot extends Application {
 
     @Override
     public void start(Stage stage) {
-        createIcon(GoogleMaterialDesignIcons.values(), GoogleMaterialDesignIcons.class.getSimpleName().toLowerCase() + ".png");
-        createIcon(FontAwesome.values(), FontAwesome.class.getSimpleName().toLowerCase() + ".png");
-        createIcon(MFGLabs.values(), MFGLabs.class.getSimpleName().toLowerCase() + ".png");
-        createIcon(Iconic.values(), Iconic.class.getSimpleName().toLowerCase() + ".png");
+        createIcon(GoogleMaterialDesignIcons.values(), GoogleMaterialDesignIcons.class.getSimpleName());
+        createIcon(FontAwesome.values(), FontAwesome.class.getSimpleName());
+        createIcon(MFGLabs.values(), MFGLabs.class.getSimpleName());
+        createIcon(Iconic.values(), Iconic.class.getSimpleName());
 
         Platform.exit();
     }
