@@ -8,16 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import jiconfont.IconCode;
+import jiconfont.icons.Elusive;
 import jiconfont.icons.FontAwesome;
 import jiconfont.icons.GoogleMaterialDesignIcons;
 import jiconfont.icons.Iconic;
-import jiconfont.icons.MFGLabs;
 import jiconfont.javafx.IconBuilderFX;
 
 import javax.imageio.ImageIO;
@@ -48,8 +46,56 @@ import java.io.IOException;
  */
 public class IconFontScreenshot extends Application {
 
-    private void createIcon(IconCode[] iconCodes, String filename) {
+    private void writeImage(Pane iconsPane, String filename) {
         filename = "./target/" + filename.toLowerCase() + ".png";
+        new Scene(iconsPane);
+        WritableImage image = iconsPane.snapshot(new SnapshotParameters(), null);
+        File file = new File(filename);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createMultipleColors(IconCode iconCode, String filename) {
+        HBox iconsPane = new HBox();
+        iconsPane.setAlignment(Pos.CENTER);
+        iconsPane.setSpacing(5);
+        iconsPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+
+        Label label1 = IconBuilderFX.newIcon(iconCode).setSize(30).setColor(Color.CORNFLOWERBLUE).buildLabel();
+        iconsPane.getChildren().add(label1);
+
+        Label label2 = IconBuilderFX.newIcon(iconCode).setSize(30).setColor(Color.DEEPSKYBLUE).buildLabel();
+        iconsPane.getChildren().add(label2);
+
+        Label label3 = IconBuilderFX.newIcon(iconCode).setSize(30).setColor(Color.DARKTURQUOISE).buildLabel();
+        iconsPane.getChildren().add(label3);
+
+        Label label4 = IconBuilderFX.newIcon(iconCode).setSize(30).setColor(Color.LIGHTBLUE).buildLabel();
+        iconsPane.getChildren().add(label4);
+
+        writeImage(iconsPane, filename);
+    }
+
+    private void createMultipleSizes(IconCode iconCode, String filename) {
+        HBox iconsPane = new HBox();
+        iconsPane.setAlignment(Pos.CENTER);
+        iconsPane.setSpacing(5);
+        iconsPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+
+        int size = 10;
+        for (int i = 0; i < 5; i++) {
+            Label label = IconBuilderFX.newIcon(iconCode).setSize(size).setColor(Color.BLACK).buildLabel();
+            iconsPane.getChildren().add(label);
+            size = size + 10;
+        }
+
+        writeImage(iconsPane, filename);
+    }
+
+    private void createIcon(IconCode[] iconCodes, String filename) {
         TilePane iconsPane = new TilePane();
         iconsPane.setAlignment(Pos.CENTER);
         iconsPane.setPrefWidth(650);
@@ -62,26 +108,17 @@ public class IconFontScreenshot extends Application {
             iconsPane.getChildren().add(label);
         }
 
-        new Scene(iconsPane);
-
-        if (true) {
-            WritableImage image = iconsPane.snapshot(new SnapshotParameters(), null);
-            File file = new File(filename);
-            try {
-                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        writeImage(iconsPane, filename);
     }
 
     @Override
     public void start(Stage stage) {
         createIcon(GoogleMaterialDesignIcons.values(), GoogleMaterialDesignIcons.class.getSimpleName());
         createIcon(FontAwesome.values(), FontAwesome.class.getSimpleName());
-        createIcon(MFGLabs.values(), MFGLabs.class.getSimpleName());
         createIcon(Iconic.values(), Iconic.class.getSimpleName());
-
+        createIcon(Elusive.values(), Elusive.class.getSimpleName());
+        createMultipleSizes(FontAwesome.CHECK, "multiplesizes");
+        createMultipleColors(FontAwesome.CHECK, "multiplecolors");
         Platform.exit();
     }
 
