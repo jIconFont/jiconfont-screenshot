@@ -1,6 +1,8 @@
 package jiconfont.screenshot;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -53,7 +55,7 @@ import jiconfont.javafx.IconNode;
 public class IconFontScreenshot extends Application {
 
   private void writeImage(Pane iconsPane, String path, String filename) {
-    String f = "./target/";
+    String f = getTargetDir();
     if (path != null) {
       f += path.toLowerCase() + "/";
       File dir = new File(f);
@@ -63,7 +65,9 @@ public class IconFontScreenshot extends Application {
     }
     f += filename.toLowerCase() + ".png";
     new Scene(iconsPane);
-    WritableImage image = iconsPane.snapshot(new SnapshotParameters(), null);
+    SnapshotParameters parameters = new SnapshotParameters();
+    parameters.setFill(Color.TRANSPARENT);
+    WritableImage image = iconsPane.snapshot(parameters, null);
     File file = new File(f);
     try {
       ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
@@ -148,13 +152,19 @@ public class IconFontScreenshot extends Application {
   }
 
   private void iconCatalogScreenshot(IconCode[] iconCodes, String path) {
+    path = path.toLowerCase();
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("Name | Icon (16, 20, 24, 32)\n");
+    sb.append("------------ | -------------\n");
+
     for (IconCode icon : iconCodes) {
       TilePane iconsPane = new TilePane();
       iconsPane.setAlignment(Pos.CENTER);
       iconsPane.setPrefWidth(150);
       iconsPane.setMaxWidth(150);
       iconsPane.setBackground(
-        new Background(new BackgroundFill(Color.WHITE, null, null)));
+        new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
       iconsPane.setHgap(5);
       iconsPane.setVgap(5);
       IconNode iconNode1 = buildIconNode(icon, 16, Color.BLACK);
@@ -165,11 +175,58 @@ public class IconFontScreenshot extends Application {
         iconNode4);
       String filename = icon.name().toLowerCase();
       writeImage(iconsPane, path, filename);
+
+      sb.append(icon.name());
+      sb.append(" | ");
+      sb.append("![icon](http://jiconfont.github.io/images/");
+      sb.append(path);
+      sb.append("/");
+      sb.append(filename);
+      sb.append(".png)");
+      sb.append("\n");
+    }
+
+    String f = getTargetDir();
+    if (path != null) {
+      f += path.toLowerCase() + "/";
+      File dir = new File(f);
+      if (dir.exists() == false) {
+        dir.mkdir();
+      }
+    }
+    f += "icontable.txt";
+
+    try {
+      File file = new File(f);
+      if (!file.exists()) {
+        file.createNewFile();
+      }
+
+      FileWriter fw = new FileWriter(file.getAbsoluteFile());
+      BufferedWriter bw = new BufferedWriter(fw);
+      bw.write(sb.toString());
+      bw.close();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private String getTargetDir(){
+    return "./target/images/";
+  }
+
+  private void createTargetDir(){
+    File dir = new File(getTargetDir());
+    if (dir.exists() == false) {
+      dir.mkdir();
     }
   }
 
   @Override
   public void start(Stage stage) {
+    createTargetDir();
+
     IconFontFX.register(GoogleMaterialDesignIcons.getIconFont());
     IconFontFX.register(FontAwesome.getIconFont());
     IconFontFX.register(Iconic.getIconFont());
