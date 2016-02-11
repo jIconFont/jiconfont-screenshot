@@ -84,13 +84,13 @@ public class IconFontScreenshot extends Application {
     return iconNode;
   }
 
-  private void iconScreenshot(IconCode iconCode, String filename) {
+  private void iconScreenshot(IconCode iconCode, String filename, Color color) {
     HBox iconsPane = new HBox();
     iconsPane.setAlignment(Pos.CENTER);
     iconsPane.setBackground(
-      new Background(new BackgroundFill(Color.WHITE, null, null)));
+      new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
-    IconNode iconNode = buildIconNode(iconCode, 25, Color.CORNFLOWERBLUE);
+    IconNode iconNode = buildIconNode(iconCode, 35, color);
     iconsPane.getChildren().add(iconNode);
 
     writeImage(iconsPane, null, filename);
@@ -212,11 +212,11 @@ public class IconFontScreenshot extends Application {
     }
   }
 
-  private String getTargetDir(){
+  private String getTargetDir() {
     return "./target/images/";
   }
 
-  private void createTargetDir(){
+  private void createTargetDir() {
     File dir = new File(getTargetDir());
     if (dir.exists() == false) {
       dir.mkdir();
@@ -252,8 +252,11 @@ public class IconFontScreenshot extends Application {
 
     createMultipleColors(FontAwesome.CHECK, "multiplecolors");
 
-    iconScreenshot(Elusive.LINKEDIN, "linkedin");
-    iconScreenshot(Elusive.GITHUB, "github");
+    iconScreenshot(Elusive.HOME_ALT, "home", Color.WHITE);
+    iconScreenshot(Elusive.HOME_ALT, "home_hover", Color.WHITESMOKE);
+
+    iconScreenshot(Elusive.GITHUB, "github", Color.WHITE);
+    iconScreenshot(Elusive.GITHUB, "github_hover", Color.WHITESMOKE);
 
     Platform.exit();
   }
