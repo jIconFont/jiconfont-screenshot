@@ -1,10 +1,5 @@
 package jiconfont.screenshot;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
@@ -12,24 +7,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import javax.imageio.ImageIO;
-
 import jiconfont.IconCode;
-import jiconfont.icons.Elusive;
-import jiconfont.icons.Entypo;
-import jiconfont.icons.FontAwesome;
-import jiconfont.icons.GoogleMaterialDesignIcons;
-import jiconfont.icons.Iconic;
+import jiconfont.icons.*;
 import jiconfont.javafx.IconFontFX;
 import jiconfont.javafx.IconNode;
+
+import javax.imageio.ImageIO;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Copyright (c) 2016 jIconFont <BR>
@@ -253,10 +243,13 @@ public class IconFontScreenshot extends Application {
     createMultipleColors(FontAwesome.CHECK, "multiplecolors");
 
     iconScreenshot(Elusive.HOME_ALT, "home", Color.WHITE);
-    iconScreenshot(Elusive.HOME_ALT, "home_hover", Color.WHITESMOKE);
+    iconScreenshot(Elusive.HOME_ALT, "home_hover", Color.GAINSBORO);
 
     iconScreenshot(Elusive.GITHUB, "github", Color.WHITE);
-    iconScreenshot(Elusive.GITHUB, "github_hover", Color.WHITESMOKE);
+    iconScreenshot(Elusive.GITHUB, "github_hover", Color.GAINSBORO);
+
+      iconScreenshot(Elusive.DOWNLOAD, "download", Color.WHITE);
+      iconScreenshot(Elusive.DOWNLOAD, "download_hover", Color.GAINSBORO);
 
     Platform.exit();
   }
