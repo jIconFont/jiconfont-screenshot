@@ -13,7 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import jiconfont.IconCode;
 import jiconfont.icons.*;
-import jiconfont.javafx.IconBuilderFX;
+import jiconfont.javafx.IconFontFX;
+import jiconfont.javafx.IconNode;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -55,13 +56,20 @@ public class IconFontScreenshot extends Application {
         }
     }
 
+    private IconNode buildIconNode(IconCode iconCode, Number size, Color fill) {
+        IconNode iconNode = new IconNode(iconCode);
+        iconNode.setIconSize(size);
+        iconNode.setFill(fill);
+       return iconNode;
+    }
+
     private void createIcon(IconCode iconCode, String filename) {
         HBox iconsPane = new HBox();
         iconsPane.setAlignment(Pos.CENTER);
         iconsPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 
-        Label label = IconBuilderFX.newIcon(iconCode).setSize(25).setColor(Color.CORNFLOWERBLUE).buildLabel();
-        iconsPane.getChildren().add(label);
+        IconNode iconNode = buildIconNode(iconCode, 25, Color.CORNFLOWERBLUE);
+        iconsPane.getChildren().add(iconNode);
 
         writeImage(iconsPane, filename);
     }
@@ -72,17 +80,17 @@ public class IconFontScreenshot extends Application {
         iconsPane.setSpacing(5);
         iconsPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 
-        Label label1 = IconBuilderFX.newIcon(iconCode).setSize(30).setColor(Color.CORNFLOWERBLUE).buildLabel();
-        iconsPane.getChildren().add(label1);
+        IconNode iconNode1 = buildIconNode(iconCode, 30, Color.CORNFLOWERBLUE);
+        iconsPane.getChildren().add(iconNode1);
 
-        Label label2 = IconBuilderFX.newIcon(iconCode).setSize(30).setColor(Color.DEEPSKYBLUE).buildLabel();
-        iconsPane.getChildren().add(label2);
+        IconNode iconNode2 = buildIconNode(iconCode, 30, Color.DEEPSKYBLUE);
+        iconsPane.getChildren().add(iconNode2);
 
-        Label label3 = IconBuilderFX.newIcon(iconCode).setSize(30).setColor(Color.DARKTURQUOISE).buildLabel();
-        iconsPane.getChildren().add(label3);
+        IconNode iconNode3 = buildIconNode(iconCode, 30, Color.DARKTURQUOISE);
+        iconsPane.getChildren().add(iconNode3);
 
-        Label label4 = IconBuilderFX.newIcon(iconCode).setSize(30).setColor(Color.LIGHTBLUE).buildLabel();
-        iconsPane.getChildren().add(label4);
+        IconNode iconNode4 = buildIconNode(iconCode, 30, Color.LIGHTBLUE);
+        iconsPane.getChildren().add(iconNode4);
 
         writeImage(iconsPane, filename);
     }
@@ -95,8 +103,8 @@ public class IconFontScreenshot extends Application {
 
         int size = 10;
         for (int i = 0; i < 5; i++) {
-            Label label = IconBuilderFX.newIcon(iconCode).setSize(size).setColor(Color.BLACK).buildLabel();
-            iconsPane.getChildren().add(label);
+            IconNode iconNode = buildIconNode(iconCode, size, Color.BLACK);
+            iconsPane.getChildren().add(iconNode);
             size = size + 10;
         }
 
@@ -112,8 +120,8 @@ public class IconFontScreenshot extends Application {
         iconsPane.setHgap(5);
         iconsPane.setVgap(5);
         for (IconCode icon : iconCodes) {
-            Label label = IconBuilderFX.newIcon(icon).setSize(25).setColor(Color.BLACK).buildLabel();
-            iconsPane.getChildren().add(label);
+            IconNode iconNode = buildIconNode(icon, 25, Color.BLACK);
+            iconsPane.getChildren().add(iconNode);
         }
 
         writeImage(iconsPane, filename);
@@ -121,6 +129,12 @@ public class IconFontScreenshot extends Application {
 
     @Override
     public void start(Stage stage) {
+        IconFontFX.register(GoogleMaterialDesignIcons.getIconFont());
+        IconFontFX.register(FontAwesome.getIconFont());
+        IconFontFX.register(Iconic.getIconFont());
+        IconFontFX.register(Elusive.getIconFont());
+        IconFontFX.register(Entypo.getIconFont());
+
         createIcon(GoogleMaterialDesignIcons.values(), GoogleMaterialDesignIcons.class.getSimpleName());
         createIcon(FontAwesome.values(), FontAwesome.class.getSimpleName());
         createIcon(Iconic.values(), Iconic.class.getSimpleName());
