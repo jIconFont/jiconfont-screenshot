@@ -22,6 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 /**
  * Copyright (c) 2016 jIconFont <BR>
@@ -143,17 +144,17 @@ public class IconFontScreenshot extends Application {
     writeImage(iconsPane, null, filename);
   }
 
-  private void iconCatalogScreenshot(IconCode[] iconCodes, String htmlFile, String path) {
+  private void iconCheatSheet(IconCode[] iconCodes, String name) {
 
 
 
-    path = path.toLowerCase();
+      name = name.toLowerCase();
 
-    StringBuilder sb = new StringBuilder();
-      sb.append("<TABLE width=\"100%\" cellpadding=\"5\" cellspacing=\"0\">\n");
-      sb.append("<TR>");
-    sb.append("<TH width='50%'>Name</TH><TH width='50%'>Icon (16, 20, 24, 32)</TH>");
-      sb.append("</TR>\n");
+    StringBuilder cheatsheet = new StringBuilder();
+      cheatsheet.append("<TABLE width=\"100%\" cellpadding=\"5\" cellspacing=\"0\">\n");
+      cheatsheet.append("<TR>");
+    cheatsheet.append("<TH width='50%'>Name</TH><TH width='50%'>Icon (16, 20, 24, 32)</TH>");
+      cheatsheet.append("</TR>\n");
 
       boolean odd = true;
     for (IconCode icon : iconCodes) {
@@ -172,40 +173,48 @@ public class IconFontScreenshot extends Application {
       iconsPane.getChildren().addAll(iconNode1, iconNode2, iconNode3,
         iconNode4);
       String filename = icon.name().toLowerCase();
-      writeImage(iconsPane, path, filename);
+      writeImage(iconsPane, name, filename);
 
 if(odd) {
-    sb.append("<TR class='tr1'>");
+    cheatsheet.append("<TR class='tr1'>");
 } else {
-    sb.append("<TR class='tr2'>");
+    cheatsheet.append("<TR class='tr2'>");
 }
         odd=!odd;
-        sb.append("<TD width='50%'>");
-      sb.append(icon.name());
-        sb.append("</TD>");
-        sb.append("<TD width='50%'>");
-      sb.append("<img src='images/");
-      sb.append(path);
-      sb.append("/");
-      sb.append(filename);
-      sb.append(".png'/>");
-        sb.append("</TD>");
-        sb.append("</TR>\n");
+        cheatsheet.append("<TD width='50%'>");
+      cheatsheet.append(icon.name());
+        cheatsheet.append("</TD>");
+        cheatsheet.append("<TD width='50%'>");
+      cheatsheet.append("<img src='images/");
+      cheatsheet.append(name);
+      cheatsheet.append("/");
+      cheatsheet.append(filename);
+      cheatsheet.append(".png'/>");
+        cheatsheet.append("</TD>");
+        cheatsheet.append("</TR>\n");
     }
-      sb.append("</TABLE>\n");
+      cheatsheet.append("</TABLE>\n");
 
-    String f = getTargetDir() +  htmlFile;
+
 
     try {
-        String template = new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class.getResource("/templates/"+htmlFile).toURI())));
-        template=template.replaceFirst("-ICONS-",sb.toString());
+        Properties properties = new Properties();
+        properties.load(IconFontScreenshot.class.getResourceAsStream("/"+name + ".properties"));
+String links = new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class.getResource("/"+name+".links").toURI())));
+        String template = new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class.getResource("/iconscheatsheet.html").toURI())));
+        template=template.replaceFirst("REPLACE_CHEATSHEET", cheatsheet.toString());
+        template=template.replaceFirst("REPLACE_LINKS", links);
+        template=template.replaceAll("REPLACE_TITLE", properties.getProperty("title"));
+        template=template.replaceAll("REPLACE_DOWNLOAD_LINK", properties.getProperty("download_link"));
+        template=template.replaceAll("REPLACE_ARTIFACTID", properties.getProperty("artifactId"));
+        template=template.replaceAll("REPLACE_VERSION", properties.getProperty("version"));
 
-      File file = new File(f);
-      if (!file.exists()) {
-        file.createNewFile();
+      File htmlFile = new File(getTargetDir() +  name+".html");
+      if (!htmlFile.exists()) {
+        htmlFile.createNewFile();
       }
 
-      FileWriter fw = new FileWriter(file.getAbsoluteFile());
+      FileWriter fw = new FileWriter(htmlFile.getAbsoluteFile());
       BufferedWriter bw = new BufferedWriter(fw);
       bw.write(template);
       bw.close();
@@ -243,8 +252,7 @@ if(odd) {
     iconFontScreenshot(Elusive.values(), Elusive.class.getSimpleName());
     iconFontScreenshot(Entypo.values(), Entypo.class.getSimpleName());
 
-    iconCatalogScreenshot(GoogleMaterialDesignIcons.values(),"googlematerialdesignicons.html",
-      GoogleMaterialDesignIcons.class.getSimpleName());
+      iconCheatSheet(GoogleMaterialDesignIcons.values(), GoogleMaterialDesignIcons.class.getSimpleName());
       /*
     iconCatalogScreenshot(FontAwesome.values(),
       FontAwesome.class.getSimpleName());
