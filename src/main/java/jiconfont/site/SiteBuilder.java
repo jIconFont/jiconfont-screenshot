@@ -1,4 +1,4 @@
-package jiconfont.screenshot;
+package jiconfont.site;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -59,10 +59,10 @@ import jiconfont.javafx.IconNode;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class IconFontScreenshot extends Application {
+public class SiteBuilder extends Application {
 
   private void writeImage(Pane iconsPane, String path, String filename) {
-    String f = getTargetDir();
+    String f = getImagesTargetDir();
     if (path != null) {
       f += path.toLowerCase() + "/";
       File dir = new File(f);
@@ -212,13 +212,12 @@ public class IconFontScreenshot extends Application {
 
     try {
       Properties properties = new Properties();
-      properties.load(IconFontScreenshot.class
-        .getResourceAsStream("/" + name + ".properties"));
-      String links = new String(Files.readAllBytes(Paths.get(
-        IconFontScreenshot.class.getResource("/" + name + ".links").toURI())));
-      String template =
-        new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class
-          .getResource("/iconscheatsheet.html").toURI())));
+      properties.load(
+        SiteBuilder.class.getResourceAsStream("/" + name + ".properties"));
+      String links = new String(Files.readAllBytes(Paths
+        .get(SiteBuilder.class.getResource("/" + name + ".links").toURI())));
+      String template = new String(Files.readAllBytes(Paths
+        .get(SiteBuilder.class.getResource("/iconscheatsheet.html").toURI())));
       template =
         template.replaceFirst("REPLACE_CHEATSHEET", cheatsheet.toString());
       template = template.replaceFirst("REPLACE_LINKS", links);
@@ -231,7 +230,7 @@ public class IconFontScreenshot extends Application {
       template = template.replaceAll("REPLACE_VERSION",
         properties.getProperty("version"));
 
-      File htmlFile = new File(getTargetDir() + name + ".html");
+      File htmlFile = new File(getSiteTargetDir() + name + ".html");
       if (!htmlFile.exists()) {
         htmlFile.createNewFile();
       }
@@ -246,12 +245,20 @@ public class IconFontScreenshot extends Application {
     }
   }
 
-  private String getTargetDir() {
-    return "./target/images/";
+  private String getImagesTargetDir() {
+    return getSiteTargetDir() + "/images/";
   }
 
-  private void createTargetDir() {
-    File dir = new File(getTargetDir());
+  private String getSiteTargetDir() {
+    return "./target/site/";
+  }
+
+  private void createTargetDirectories() {
+    File dir = new File(getSiteTargetDir());
+    if (dir.exists() == false) {
+      dir.mkdir();
+    }
+    dir = new File(getImagesTargetDir());
     if (dir.exists() == false) {
       dir.mkdir();
     }
@@ -259,7 +266,7 @@ public class IconFontScreenshot extends Application {
 
   @Override
   public void start(Stage stage) {
-    createTargetDir();
+    createTargetDirectories();
 
     IconFontFX.register(GoogleMaterialDesignIcons.getIconFont());
     IconFontFX.register(FontAwesome.getIconFont());
