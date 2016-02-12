@@ -1,21 +1,5 @@
 package jiconfont.screenshot;
 
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.WritableImage;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import jiconfont.IconCode;
-import jiconfont.icons.*;
-import jiconfont.javafx.IconFontFX;
-import jiconfont.javafx.IconNode;
-
-import javax.imageio.ImageIO;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -23,6 +7,36 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.Stop;
+import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
+
+import jiconfont.IconCode;
+import jiconfont.icons.Elusive;
+import jiconfont.icons.Entypo;
+import jiconfont.icons.FontAwesome;
+import jiconfont.icons.GoogleMaterialDesignIcons;
+import jiconfont.icons.Iconic;
+import jiconfont.javafx.IconFontFX;
+import jiconfont.javafx.IconNode;
 
 /**
  * Copyright (c) 2016 jIconFont <BR>
@@ -70,20 +84,20 @@ public class IconFontScreenshot extends Application {
     }
   }
 
-  private IconNode buildIconNode(IconCode iconCode, Number size, Color fill) {
+  private IconNode buildIconNode(IconCode iconCode, Number size, Paint fill) {
     IconNode iconNode = new IconNode(iconCode);
     iconNode.setIconSize(size);
     iconNode.setFill(fill);
     return iconNode;
   }
 
-  private void iconScreenshot(IconCode iconCode, String filename, Color color) {
+  private void iconScreenshot(IconCode iconCode, String filename, Paint fill) {
     HBox iconsPane = new HBox();
     iconsPane.setAlignment(Pos.CENTER);
     iconsPane.setBackground(
       new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
-    IconNode iconNode = buildIconNode(iconCode, 35, color);
+    IconNode iconNode = buildIconNode(iconCode, 35, fill);
     iconsPane.getChildren().add(iconNode);
 
     writeImage(iconsPane, null, filename);
@@ -146,17 +160,17 @@ public class IconFontScreenshot extends Application {
 
   private void iconCheatSheet(IconCode[] iconCodes, String name) {
 
-
-
-      name = name.toLowerCase();
+    name = name.toLowerCase();
 
     StringBuilder cheatsheet = new StringBuilder();
-      cheatsheet.append("<TABLE width=\"100%\" cellpadding=\"5\" cellspacing=\"0\">\n");
-      cheatsheet.append("<TR>");
-    cheatsheet.append("<TH width='50%'>Name</TH><TH width='50%'>Icon (16, 20, 24, 32)</TH>");
-      cheatsheet.append("</TR>\n");
+    cheatsheet
+      .append("<TABLE width=\"100%\" cellpadding=\"5\" cellspacing=\"0\">\n");
+    cheatsheet.append("<TR>");
+    cheatsheet.append(
+      "<TH width='50%'>Name</TH><TH width='50%'>Icon (16, 20, 24, 32)</TH>");
+    cheatsheet.append("</TR>\n");
 
-      boolean odd = true;
+    boolean odd = true;
     for (IconCode icon : iconCodes) {
       TilePane iconsPane = new TilePane();
       iconsPane.setAlignment(Pos.CENTER);
@@ -175,41 +189,49 @@ public class IconFontScreenshot extends Application {
       String filename = icon.name().toLowerCase();
       writeImage(iconsPane, name, filename);
 
-if(odd) {
-    cheatsheet.append("<TR class='tr1'>");
-} else {
-    cheatsheet.append("<TR class='tr2'>");
-}
-        odd=!odd;
-        cheatsheet.append("<TD width='50%'>");
+      if (odd) {
+        cheatsheet.append("<TR class='tr1'>");
+      }
+      else {
+        cheatsheet.append("<TR class='tr2'>");
+      }
+      odd = !odd;
+      cheatsheet.append("<TD width='50%'>");
       cheatsheet.append(icon.name());
-        cheatsheet.append("</TD>");
-        cheatsheet.append("<TD width='50%'>");
+      cheatsheet.append("</TD>");
+      cheatsheet.append("<TD width='50%'>");
       cheatsheet.append("<img src='images/");
       cheatsheet.append(name);
       cheatsheet.append("/");
       cheatsheet.append(filename);
       cheatsheet.append(".png'/>");
-        cheatsheet.append("</TD>");
-        cheatsheet.append("</TR>\n");
+      cheatsheet.append("</TD>");
+      cheatsheet.append("</TR>\n");
     }
-      cheatsheet.append("</TABLE>\n");
-
-
+    cheatsheet.append("</TABLE>\n");
 
     try {
-        Properties properties = new Properties();
-        properties.load(IconFontScreenshot.class.getResourceAsStream("/"+name + ".properties"));
-String links = new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class.getResource("/"+name+".links").toURI())));
-        String template = new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class.getResource("/iconscheatsheet.html").toURI())));
-        template=template.replaceFirst("REPLACE_CHEATSHEET", cheatsheet.toString());
-        template=template.replaceFirst("REPLACE_LINKS", links);
-        template=template.replaceAll("REPLACE_TITLE", properties.getProperty("title"));
-        template=template.replaceAll("REPLACE_DOWNLOAD_LINK", properties.getProperty("download_link"));
-        template=template.replaceAll("REPLACE_ARTIFACTID", properties.getProperty("artifactId"));
-        template=template.replaceAll("REPLACE_VERSION", properties.getProperty("version"));
+      Properties properties = new Properties();
+      properties.load(IconFontScreenshot.class
+        .getResourceAsStream("/" + name + ".properties"));
+      String links = new String(Files.readAllBytes(Paths.get(
+        IconFontScreenshot.class.getResource("/" + name + ".links").toURI())));
+      String template =
+        new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class
+          .getResource("/iconscheatsheet.html").toURI())));
+      template =
+        template.replaceFirst("REPLACE_CHEATSHEET", cheatsheet.toString());
+      template = template.replaceFirst("REPLACE_LINKS", links);
+      template =
+        template.replaceAll("REPLACE_TITLE", properties.getProperty("title"));
+      template = template.replaceAll("REPLACE_DOWNLOAD_LINK",
+        properties.getProperty("download_link"));
+      template = template.replaceAll("REPLACE_ARTIFACTID",
+        properties.getProperty("artifactId"));
+      template = template.replaceAll("REPLACE_VERSION",
+        properties.getProperty("version"));
 
-      File htmlFile = new File(getTargetDir() +  name+".html");
+      File htmlFile = new File(getTargetDir() + name + ".html");
       if (!htmlFile.exists()) {
         htmlFile.createNewFile();
       }
@@ -252,27 +274,30 @@ String links = new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class.
     iconFontScreenshot(Elusive.values(), Elusive.class.getSimpleName());
     iconFontScreenshot(Entypo.values(), Entypo.class.getSimpleName());
 
-      iconCheatSheet(GoogleMaterialDesignIcons.values(), GoogleMaterialDesignIcons.class.getSimpleName());
-      /*
-    iconCatalogScreenshot(FontAwesome.values(),
-      FontAwesome.class.getSimpleName());
-    iconCatalogScreenshot(Iconic.values(), Iconic.class.getSimpleName());
-    iconCatalogScreenshot(Elusive.values(), Elusive.class.getSimpleName());
-    iconCatalogScreenshot(Entypo.values(), Entypo.class.getSimpleName());
-*/
+    iconCheatSheet(GoogleMaterialDesignIcons.values(),
+      GoogleMaterialDesignIcons.class.getSimpleName());
+    iconCheatSheet(Elusive.values(), Elusive.class.getSimpleName());
+    iconCheatSheet(Entypo.values(), Entypo.class.getSimpleName());
+    iconCheatSheet(FontAwesome.values(), FontAwesome.class.getSimpleName());
+    iconCheatSheet(Iconic.values(), Iconic.class.getSimpleName());
 
     createMultipleSizes(FontAwesome.CHECK, "multiplesizes");
 
     createMultipleColors(FontAwesome.CHECK, "multiplecolors");
 
+    Stop[] stops =
+      new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.DARKSEAGREEN) };
+    LinearGradient fill =
+      new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+
     iconScreenshot(Elusive.HOME_ALT, "home", Color.WHITE);
-    iconScreenshot(Elusive.HOME_ALT, "home_hover", Color.GAINSBORO);
+    iconScreenshot(Elusive.HOME_ALT, "home_hover", fill);
 
     iconScreenshot(Elusive.GITHUB, "github", Color.WHITE);
-    iconScreenshot(Elusive.GITHUB, "github_hover", Color.GAINSBORO);
+    iconScreenshot(Elusive.GITHUB, "github_hover", fill);
 
-      iconScreenshot(Elusive.DOWNLOAD, "download", Color.WHITE);
-      iconScreenshot(Elusive.DOWNLOAD, "download_hover", Color.GAINSBORO);
+    iconScreenshot(Elusive.DOWNLOAD, "download", Color.WHITE);
+    iconScreenshot(Elusive.DOWNLOAD, "download_hover", fill);
 
     Platform.exit();
   }
