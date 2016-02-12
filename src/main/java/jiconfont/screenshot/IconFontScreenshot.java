@@ -20,6 +20,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Copyright (c) 2016 jIconFont <BR>
@@ -141,13 +143,19 @@ public class IconFontScreenshot extends Application {
     writeImage(iconsPane, null, filename);
   }
 
-  private void iconCatalogScreenshot(IconCode[] iconCodes, String path) {
+  private void iconCatalogScreenshot(IconCode[] iconCodes, String htmlFile, String path) {
+
+
+
     path = path.toLowerCase();
 
     StringBuilder sb = new StringBuilder();
-    sb.append("Name | Icon (16, 20, 24, 32)\n");
-    sb.append("------------ | -------------\n");
+      sb.append("<TABLE width=\"100%\" cellpadding=\"5\" cellspacing=\"0\">\n");
+      sb.append("<TR>");
+    sb.append("<TH width='50%'>Name</TH><TH width='50%'>Icon (16, 20, 24, 32)</TH>");
+      sb.append("</TR>\n");
 
+      boolean odd = true;
     for (IconCode icon : iconCodes) {
       TilePane iconsPane = new TilePane();
       iconsPane.setAlignment(Pos.CENTER);
@@ -166,27 +174,32 @@ public class IconFontScreenshot extends Application {
       String filename = icon.name().toLowerCase();
       writeImage(iconsPane, path, filename);
 
+if(odd) {
+    sb.append("<TR class='tr1'>");
+} else {
+    sb.append("<TR class='tr2'>");
+}
+        odd=!odd;
+        sb.append("<TD width='50%'>");
       sb.append(icon.name());
-      sb.append(" | ");
-      sb.append("![icon](http://jiconfont.github.io/images/");
+        sb.append("</TD>");
+        sb.append("<TD width='50%'>");
+      sb.append("<img src='images/");
       sb.append(path);
       sb.append("/");
       sb.append(filename);
-      sb.append(".png)");
-      sb.append("\n");
+      sb.append(".png'/>");
+        sb.append("</TD>");
+        sb.append("</TR>\n");
     }
+      sb.append("</TABLE>\n");
 
-    String f = getTargetDir();
-    if (path != null) {
-      f += path.toLowerCase() + "/";
-      File dir = new File(f);
-      if (dir.exists() == false) {
-        dir.mkdir();
-      }
-    }
-    f += "icontable.txt";
+    String f = getTargetDir() +  htmlFile;
 
     try {
+        String template = new String(Files.readAllBytes(Paths.get(IconFontScreenshot.class.getResource("/templates/"+htmlFile).toURI())));
+        template=template.replaceFirst("-ICONS-",sb.toString());
+
       File file = new File(f);
       if (!file.exists()) {
         file.createNewFile();
@@ -194,10 +207,10 @@ public class IconFontScreenshot extends Application {
 
       FileWriter fw = new FileWriter(file.getAbsoluteFile());
       BufferedWriter bw = new BufferedWriter(fw);
-      bw.write(sb.toString());
+      bw.write(template);
       bw.close();
     }
-    catch (IOException e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -230,13 +243,15 @@ public class IconFontScreenshot extends Application {
     iconFontScreenshot(Elusive.values(), Elusive.class.getSimpleName());
     iconFontScreenshot(Entypo.values(), Entypo.class.getSimpleName());
 
-    iconCatalogScreenshot(GoogleMaterialDesignIcons.values(),
+    iconCatalogScreenshot(GoogleMaterialDesignIcons.values(),"googlematerialdesignicons.html",
       GoogleMaterialDesignIcons.class.getSimpleName());
+      /*
     iconCatalogScreenshot(FontAwesome.values(),
       FontAwesome.class.getSimpleName());
     iconCatalogScreenshot(Iconic.values(), Iconic.class.getSimpleName());
     iconCatalogScreenshot(Elusive.values(), Elusive.class.getSimpleName());
     iconCatalogScreenshot(Entypo.values(), Entypo.class.getSimpleName());
+*/
 
     createMultipleSizes(FontAwesome.CHECK, "multiplesizes");
 
