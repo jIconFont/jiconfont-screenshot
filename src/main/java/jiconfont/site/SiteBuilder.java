@@ -1,13 +1,5 @@
 package jiconfont.site;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Properties;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
@@ -15,28 +7,22 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.Stop;
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
 import javafx.stage.Stage;
-
-import javax.imageio.ImageIO;
-
 import jiconfont.IconCode;
-import jiconfont.icons.Elusive;
-import jiconfont.icons.Entypo;
-import jiconfont.icons.FontAwesome;
-import jiconfont.icons.GoogleMaterialDesignIcons;
-import jiconfont.icons.Iconic;
+import jiconfont.icons.*;
 import jiconfont.javafx.IconFontFX;
 import jiconfont.javafx.IconNode;
+
+import javax.imageio.ImageIO;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Properties;
 
 /**
  * Copyright (c) 2016 jIconFont <BR>
@@ -273,6 +259,7 @@ public class SiteBuilder extends Application {
     IconFontFX.register(Iconic.getIconFont());
     IconFontFX.register(Elusive.getIconFont());
     IconFontFX.register(Entypo.getIconFont());
+      IconFontFX.register(Typicons.getIconFont());
 
     iconFontScreenshot(GoogleMaterialDesignIcons.values(),
       GoogleMaterialDesignIcons.class.getSimpleName());
@@ -280,6 +267,7 @@ public class SiteBuilder extends Application {
     iconFontScreenshot(Iconic.values(), Iconic.class.getSimpleName());
     iconFontScreenshot(Elusive.values(), Elusive.class.getSimpleName());
     iconFontScreenshot(Entypo.values(), Entypo.class.getSimpleName());
+      iconFontScreenshot(Typicons.values(), Typicons.class.getSimpleName());
 
     iconCheatSheet(GoogleMaterialDesignIcons.values(),
       GoogleMaterialDesignIcons.class.getSimpleName());
@@ -287,6 +275,7 @@ public class SiteBuilder extends Application {
     iconCheatSheet(Entypo.values(), Entypo.class.getSimpleName());
     iconCheatSheet(FontAwesome.values(), FontAwesome.class.getSimpleName());
     iconCheatSheet(Iconic.values(), Iconic.class.getSimpleName());
+      iconCheatSheet(Typicons.values(), Typicons.class.getSimpleName());
 
     createMultipleSizes(FontAwesome.CHECK, "multiplesizes");
 
